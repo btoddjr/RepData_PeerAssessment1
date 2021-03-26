@@ -11,9 +11,9 @@ output:
 ```r
 library(knitr)
 
-# Project forked from original https://github.com/rdpeng/RepData_PeerAssessment1
+# Project forked from the https://github.com/rdpeng/RepData_PeerAssessment1 repository
 
-# Load the data (i.e. read.csv()) -- check for data files
+# Load the data (i.e. read.csv())
 
 if (!file.exists("activity.csv")) {
 	unzip("activity.zip")
@@ -52,7 +52,7 @@ dailysteps <- aggregate(steps~date, stepdata, sum)
 # Using a simple histogram from base plotting system
 
 hist(dailysteps$steps, xlab="Daily Total Steps", ylab="Number of Days", 
-	 main="Distribution of Daily Steps")
+	 main="Distribution of Daily Steps", col = "wheat")
 ```
 
 ![](PA1_template_files/figure-html/getmeans-1.png)<!-- -->
@@ -89,8 +89,8 @@ mediansteps
 
 avgstepinterval <- aggregate(steps~interval, stepdata, mean)
 
-plot(avgstepinterval$interval, avgstepinterval$steps, type = "l", xlab = "Interval", ylab = "Average Steps", 
-	 main = "Average Steps per Interval")
+plot(avgstepinterval$interval, avgstepinterval$steps, type = "l", xlab = "5-Minute Interval", ylab = "Average Steps", 
+	 main = "Average Steps per Interval", col = "blue")
 ```
 
 ![](PA1_template_files/figure-html/dailyactivity-1.png)<!-- -->
@@ -143,7 +143,7 @@ imputedstepdata$steps[x] <- intervalavg[as.character(imputedstepdata$interval[x]
 imputeddailysteps <- aggregate(steps~date, imputedstepdata, sum)
 
 hist(imputeddailysteps$steps, xlab="Daily Total Steps", ylab="Number of Days", 
-	 main="Distribution of Daily Steps (w/ Imputed Data)")
+	 main="Distribution of Daily Steps (w/ Imputed Data)", col = "wheat")
 ```
 
 ![](PA1_template_files/figure-html/fillmissingvalues-1.png)<!-- -->
@@ -177,7 +177,7 @@ library(lattice)
 
 # Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
 
-isweekday <- function(d) {
+isweekend <- function(d) {
 	if(weekdays(d) == "Saturday" | weekdays(d) == "Sunday") {
 		dtype <- "weekend"
 	}
@@ -187,14 +187,13 @@ isweekday <- function(d) {
 	return(dtype)
 }
 
-stepdata$daytype <- sapply(stepdata$date, isweekday)
+stepdata$daytype <- sapply(stepdata$date, isweekend)
 
 # Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
-# Using a plot lattice system to emulate the sample panel plot provided in the instructions
 
-# daytypecounts <- aggregate(steps ~ interval+daytype, data=stepdata, FUN=mean)
+# Using an xyplot lattice system to emulate the sample panel plot provided in the instructions
 
-xyplot(steps ~ interval | factor(daytype), layout = c(1, 2), type = "l", xlab = "5-minute interval", ylab = "Average number of steps", 
+xyplot(steps ~ interval | factor(daytype), layout = c(1, 2), type = "l", xlab = "5-Minute Interval", ylab = "Average Number of Steps", 
 	   data = aggregate(steps ~ interval+daytype, data=stepdata, FUN=mean))
 ```
 
